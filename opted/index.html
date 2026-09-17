@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>OPTED: On-Policy Fine-Tuning for End-to-End Driving using a Render-Free Teacher</title>
+  <meta name="description" content="OPTED decouples reinforcement learning from the post-training of end-to-end driving policies: a privileged teacher trained with RL on vectorized inputs supervises a pre-trained sensor-based student during closed-loop fine-tuning.">
+  <meta property="og:title" content="OPTED: On-Policy Fine-Tuning for End-to-End Driving using a Render-Free Teacher">
+  <meta property="og:description" content="A render-free RL teacher supervises closed-loop fine-tuning of camera-based driving policies.">
+  <meta property="og:image" content="https://01dami23.github.io/opted/static/teaser.png">
+  <meta property="og:type" content="website">
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="container">
+
+  <div class="center">
+    <h1 class="title">OPTED: On-Policy Fine-Tuning for End-to-End Driving using a Render-Free Teacher</h1>
+    <div class="venue">arXiv preprint, 2026</div>
+
+    <!-- TODO: final author list, order and affiliations -->
+    <div class="authors">
+      <a href="https://01dami23.github.io/">Damiano Da Col</a><sup>1,2</sup>,
+      Author Two<sup>1</sup>,
+      Author Three<sup>3</sup>,
+      <a href="#">Christos Sakaridis</a><sup>2</sup>,
+      <a href="#">Konrad Schindler</a><sup>2</sup>,
+      <a href="https://kashyap7x.github.io/">Kashyap Chitta</a><sup>1</sup>
+    </div>
+    <div class="affil">
+      <sup>1</sup>KE:SAI &nbsp;&nbsp; <sup>2</sup>ETH Zurich &nbsp;&nbsp; <sup>3</sup>NVIDIA Research
+    </div>
+
+    <div class="buttons">
+      <!-- TODO: replace with the arXiv abs link once assigned -->
+      <a class="btn" href="https://arxiv.org/abs/XXXX.XXXXX">Paper (arXiv)</a>
+      <a class="btn" href="https://github.com/01Dami23/opted">Code (coming soon)</a>
+      <a class="btn disabled" href="#">Video (coming soon)</a>
+    </div>
+  </div>
+
+  <figure class="center">
+    <img src="static/teaser.png" alt="OPTED overview: rendered sensor input seen by the student on top, HD map and agents seen by the teacher below" style="max-width: 520px;">
+    <figcaption>
+      A pre-trained end-to-end student drives closed-loop in a sensor-based simulator (top).
+      At every visited state, a privileged teacher trained with RL on vectorized inputs in a render-free simulator (bottom) provides the distillation target.
+    </figcaption>
+  </figure>
+
+  <h2>Abstract</h2>
+  <p>
+    As scaling pre-training data alone yields diminishing returns, post-training is becoming increasingly important across physical AI domains such as autonomous driving.
+    End-to-end driving policies are pre-trained in open loop with behavior cloning on human demonstrations.
+    However, compounding errors during closed-loop deployment can take the vehicle outside the training data distribution, increasing the risk of safety-critical incidents.
+    Closed-loop post-training can mitigate this risk but requires costly simulation for sensor-based policies.
+    We propose OPTED (on-policy fine-tuning for end-to-end driving) which decouples reinforcement learning from the post-training of the end-to-end policy:
+    a privileged teacher is trained using RL on vectorized inputs (HD-map and bounding boxes).
+    This teacher then provides supervision to the pre-trained student during closed-loop post-training.
+    We apply OPTED to two camera-based models, TransFuser and VaVAM, and fine-tune them in AlpaSim, using neural reconstructions (3DGS) of real driving logs.
+    Driving scores increase by factors of 1.6&times; and 9.5&times;, respectively.
+    In controlled experiments OPTED matches closed-loop performance with approximately three orders of magnitude fewer simulator interactions than direct RL post-training, while staying closer to the human prior.
+  </p>
+
+  <h2>Method</h2>
+  <figure>
+    <img src="static/pipeline.png" alt="The OPTED pipeline: teacher and student pre-training, then iterated closed-loop data collection, teacher labeling and student update">
+    <figcaption>
+      <b>The OPTED pipeline.</b> A privileged teacher is trained with RL in a render-free simulator on vectorized states.
+      The end-to-end student is pre-trained with behavior cloning on human driving logs.
+      Fine-tuning then iterates three steps: (1) the student drives the rendered simulator in closed loop;
+      (2) each visited state is synchronized into the vectorized simulator, where the frozen teacher produces the target trajectory;
+      (3) the student is updated on a FIFO buffer of recent rollouts with an imitation loss matched to its output head.
+    </figcaption>
+  </figure>
+
+  <h2>Results</h2>
+  <p>
+    On the 441 held-out NuRec scenes in AlpaSim, OPTED raises the scene score of LTFv6 from 26.5 to 41.8 and of VaVAM from 3.9 to 37.1,
+    outperforming open-loop BC fine-tuning and closed-loop supervised fine-tuning with log-anchored targets at equal training budget.
+    Both improvements transfer to the private AlpaSim challenge leaderboard.
+    In a controlled study with vectorized students on WOMD, OPTED reaches 95% of the teacher's scene score in about 6.8k closed-loop episodes,
+    against 6.2M for RL fine-tuning of the same student, while staying closer to the human jerk distribution.
+  </p>
+  <!-- TODO: add the results table / sample-efficiency figure and the ICRA video once available -->
+
+  <h2>Code</h2>
+  <p>
+    Code will be released at <a href="https://github.com/01Dami23/opted">github.com/01Dami23/opted</a>.
+    <!-- TODO: confirm the repository name -->
+  </p>
+
+  <h2>Citation</h2>
+  <pre id="bibtex">@article{dacol2026opted,
+  title   = {{OPTED}: On-Policy Fine-Tuning for End-to-End Driving using a Render-Free Teacher},
+  author  = {Da Col, Damiano and TODO},
+  journal = {arXiv preprint arXiv:XXXX.XXXXX},
+  year    = {2026}
+}</pre>
+
+  <footer>
+    <a href="../">Damiano Da Col</a> &middot; 2026
+  </footer>
+</div>
+</body>
+</html>
